@@ -1,0 +1,26 @@
+# Data directory
+/data/*
+!/data/processed/geocoded_districts_affected.csv
+# include specific files
+
+# IDE (Integrated Development Environment)
+.idea/
+
+# Jupyter notebooks
+.ipynb_checkpoints
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# MLFlow runs
+/mlruns/*
+
+# Data directory
+/data/*
+
+#Virtual Enviroments
+/venv/
+
+#Ignoring conda folder
+.conda
