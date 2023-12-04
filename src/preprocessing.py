@@ -38,7 +38,6 @@ class Preprocesser:
         self.df_list_processed = df_list_post
         return df_list_post
 
-
     def filter_condition_from_df(self, df: pd.DataFrame, condition: str) -> pd.DataFrame:
         """ Selects the corresponding rows from the given dataframe based on the condition """
         df = df[df["Condition"] == condition]
