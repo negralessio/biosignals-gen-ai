@@ -1,0 +1,8 @@
+# PREPROCESSING SETTINGS
+preprocessing:
+  condition: "MathxHard"
+  rolling_window_size: 250
+  fixed_size: 10990
+
+# MODELLING SETTINGS
+# TBD
