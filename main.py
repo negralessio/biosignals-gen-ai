@@ -15,6 +15,11 @@ def main():
     preprocesser = Preprocesser(df_list=df_list, **cfg["preprocessing"])
     df_list = preprocesser.preprocess_data()
 
+    for df in df_list:
+        print(df.shape)
+
+    # TODO:
+    # Save preprocessed data so we do not have to execute preprocessing and loading everytime
 
 
 if __name__ == '__main__':
