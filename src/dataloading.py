@@ -4,18 +4,31 @@ import pandas as pd
 
 
 class DataLoader:
-    def __init__(self, path_to_data):
+    def __init__(self, path_to_data: str):
+        """
+        :param path_to_data: str -- Path to where the session data lies (see config.yaml)
+        """
         self.path_to_data: str = path_to_data
 
         self.data_paths = None
         self.data = None
 
     def load_data(self) -> list[pd.DataFrame]:
+        """
+        First gets the path to each individual .csv file and then loads them as dataframes
+
+        :return: data: list[pd.DataFrame]
+        """
         _ = self.get_paths_to_data()
         _ = self.load_data_as_dataframe()
         return self.data
 
     def get_paths_to_data(self, append_path: bool = True) -> list[str]:
+        """ Returns the paths to the .csv files
+
+        :param append_path: Whether to attend the relative path (from root) to the .csv file
+        :return: data_paths: list[str]
+        """
         # Get list of csv files
         data_paths = os.listdir(self.path_to_data)
 
@@ -31,6 +44,10 @@ class DataLoader:
         return data_paths
 
     def load_data_as_dataframe(self) -> list[pd.DataFrame]:
+        """ Loads the .csv file into dataframes
+
+        :return: list[pd.DataFrames]
+        """
         data = []
         for path in self.data_paths:
             df = pd.read_csv(path)
