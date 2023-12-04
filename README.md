@@ -13,10 +13,9 @@ TBD
  ┣ 📂notebooks                 <-- Jupyter Notebooks used in development
  ┣ 📂src                       <-- Source code / modules / classes
  ┣ 📂tests                     <-- Unit tests for the source code
- ┃ ┣ 📜data_cleaning.py        <-- Contains the functions for data cleaning
- ┃ ┣ 📜feature_engineering.py  <-- Contains the functions for feature engineering
- ┃ ┣ 📜feature_selection.py    <-- Contains the functions for feature selection
- ┃ ┗ 📜modelling.py            <-- Contains the functions for model training
+ ┃ ┣ 📜dataloading.py          <-- Class that handles the data loading
+ ┃ ┣ 📜preprocessing.py        <-- Class that handles the data preprocessing
+ ┃ ┗ 📜utils.py                <-- Contains utility / helper functions
  ┣ 🕹️main.py                   <-- Entry point of the pipeline
  ┣ 📜README.md                 <-- The top-level README for developers using this project
  ┗ 📜requirements.txt          <-- The requirenments file for reproducing the environment
