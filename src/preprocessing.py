@@ -1,5 +1,6 @@
 """ Class that handles the preprocessing of the input dataframes """
 import pandas as pd
+import os
 import logging
 import time
 
@@ -103,3 +104,17 @@ class Preprocesser:
             df = df.iloc[:-k]
 
         return df
+
+    def save_processed_dataframes(self, path_to_save: str = "data/processed/P01/") -> None:
+        """ Saves processed dataframes into the specified directory
+
+        :param path_to_save: str -- Directory to save processed dfs
+        :return: None
+        """
+        if not os.path.exists(path_to_save):
+            os.makedirs(path_to_save)
+
+        for i, df in enumerate(self.df_list_processed):
+            df.to_csv(path_to_save + f"{i+1}.csv")
+
+        logger.info(f"Saved data in '{path_to_save}' ...")

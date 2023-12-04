@@ -20,10 +20,10 @@ def main():
 
     # Apply preprocessing pipeline to each df in df_list
     preprocesser = Preprocesser(df_list=df_list, **cfg["preprocessing"])
-    df_list = preprocesser.preprocess_data()
+    df_list: list[pd.DataFrame] = preprocesser.preprocess_data()
 
-    # TODO:
-    # Save preprocessed data so we do not have to execute preprocessing and loading everytime
+    # To save them
+    # preprocesser.save_processed_dataframes(path_to_save="data/processed/P01/")
 
 
 if __name__ == '__main__':
