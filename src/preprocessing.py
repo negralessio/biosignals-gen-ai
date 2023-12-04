@@ -1,5 +1,12 @@
 """ Class that handles the preprocessing of the input dataframes """
 import pandas as pd
+import logging
+import time
+
+import src.utils as utils
+
+utils.setup_logging()
+logger = logging.getLogger(__name__)
 
 
 class Preprocesser:
@@ -23,7 +30,13 @@ class Preprocesser:
 
         :return: df_list_processed: list[pd.DataFrame]
         """
+        logger.info(f"Starting preprocessing pipeline (Condition: {self.condition},"
+                    f" Window Size: {self.rolling_window_size},"
+                    f" Fixed Size: {self.fixed_size}) ...")
+        start_time = time.time()
         df_list_post = []
+
+        # Iterate through each provided dataframe and apply multiple preprocessing steps
         for df in self.df_list:
             df = self.filter_condition_from_df(df, condition=self.condition)
             for col in self.get_eeg_cols(df):
@@ -32,8 +45,11 @@ class Preprocesser:
             df = self.set_time_to_index(df)
             df = self.keep_only_relevant_features(df)
             df = self.cut_df_to_fixed_sized(df, desired_size=self.fixed_size)
-
+            # Append preprocessed dataframe to list
             df_list_post.append(df)
+
+        dur = time.time() - start_time
+        logger.info(f"Finished preprocessing pipeline (Duration: {dur:.2f}s) ...")
 
         self.df_list_processed = df_list_post
         return df_list_post

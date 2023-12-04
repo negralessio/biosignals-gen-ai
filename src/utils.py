@@ -1,5 +1,6 @@
 import yaml
 import argparse
+import logging
 
 
 def load_config(config_path: str) -> dict:
@@ -35,3 +36,12 @@ def parse_config_file() -> tuple[dict, str]:
     # Load config file
     cfg = load_config(args.config)
     return cfg, args.config
+
+
+def setup_logging(loglevel=logging.INFO) -> None:
+    """ Handles the logger setup / configuration
+
+    :param loglevel: Level of logging, e.g. {logging.DEBUG, logging.INFO}
+    :return: None
+    """
+    logging.basicConfig(level=loglevel, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')

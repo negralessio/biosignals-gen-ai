@@ -1,6 +1,12 @@
 """ Class that handles the data loading """
 import os
 import pandas as pd
+import logging
+
+import src.utils as utils
+
+utils.setup_logging()
+logger = logging.getLogger(__name__)
 
 
 class DataLoader:
@@ -20,7 +26,11 @@ class DataLoader:
         :return: data: list[pd.DataFrame]
         """
         _ = self.get_paths_to_data()
+        logger.info(f"Found {len(self.data_paths)} .csv files in input path '{self.path_to_data}' ...")
+
         _ = self.load_data_as_dataframe()
+        logger.info(f"Parsed {len(self.data)} .csv files into DataFrames ...")
+
         return self.data
 
     def get_paths_to_data(self, append_path: bool = True) -> list[str]:
@@ -41,6 +51,7 @@ class DataLoader:
 
         data_paths.sort()
         self.data_paths = data_paths
+        logger.debug(f"Identified .csv files:\n{self.data_paths}")
         return data_paths
 
     def load_data_as_dataframe(self) -> list[pd.DataFrame]:
