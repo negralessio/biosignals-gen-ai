@@ -24,3 +24,6 @@ __pycache__/
 
 #Ignoring conda folder
 .conda
+
+# Model folder
+/models/
