@@ -8,5 +8,11 @@ preprocessing:
   rolling_window_size: 250
   fixed_size: 10990
 
-# MODELLING SETTINGS
-# TBD
+# ARCHITECTURE SETTINGS
+architecture:
+  latent_dims: 2
+
+# FITTING SETTINGS
+fitting:
+  epochs: 32
+  batch_size: 1
