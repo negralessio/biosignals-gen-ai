@@ -1,10 +1,13 @@
 """ Class that handles the preprocessing of the input dataframes """
-import pandas as pd
 import os
 import logging
 import time
+import pandas as pd
+import numpy as np
 
 import src.utils as utils
+
+from sklearn.preprocessing import MinMaxScaler
 
 utils.setup_logging()
 logger = logging.getLogger(__name__)
@@ -25,11 +28,12 @@ class Preprocesser:
         self.fixed_size: int = fixed_size
 
         self.df_list_processed = None
+        self.tensor = None
 
-    def preprocess_data(self) -> list[pd.DataFrame]:
+    def preprocess_data(self) -> np.array:
         """ Applies a number of preprocessing steps to the input dataframes
 
-        :return: df_list_processed: list[pd.DataFrame]
+        :return: tensor: np.array -- 3D Tensor of processed data
         """
         logger.info(f"Starting preprocessing pipeline (Condition: {self.condition},"
                     f" Window Size: {self.rolling_window_size},"
@@ -46,14 +50,17 @@ class Preprocesser:
             df = self.set_time_to_index(df)
             df = self.keep_only_relevant_features(df)
             df = self.cut_df_to_fixed_sized(df, desired_size=self.fixed_size)
+            df = self.scale_df(df)
             # Append preprocessed dataframe to list
             df_list_post.append(df)
+
+        self.df_list_processed = df_list_post
+        _ = self.stack_to_3d()
 
         dur = time.time() - start_time
         logger.info(f"Finished preprocessing pipeline (Duration: {dur:.2f}s) ...")
 
-        self.df_list_processed = df_list_post
-        return df_list_post
+        return self.tensor
 
     def filter_condition_from_df(self, df: pd.DataFrame, condition: str) -> pd.DataFrame:
         """ Selects the corresponding rows from the given dataframe based on the condition """
@@ -105,6 +112,44 @@ class Preprocesser:
 
         return df
 
+    def scale_df(self, df: pd.DataFrame) -> pd.DataFrame:
+        """ Applies MinMaxScaler on the input df
+
+        :param df: pd.DataFrame -- Input data to be scaled
+        :return: df_scaled: pd.DataFrame
+        """
+        scaler = MinMaxScaler()
+        df_scaled = pd.DataFrame(scaler.fit_transform(df), index=df.index, columns=df.columns)
+        return df_scaled
+
+    def stack_to_3d(self) -> np.array:
+        """ Stacks the data in df_list_processed as 3D tensor ready for LSTM input
+
+        :return: np.array -- 3D Tensor of (Samples, Sequence Length, N_Features)
+        """
+        logger.info("Stacking data to 3D tensor ...")
+        sequence_length = self.df_list_processed[0].shape[0]
+
+        # Convert DataFrames to numpy arrays and reshape them
+        reshaped_data = []
+        for df in self.df_list_processed:
+            # Convert DataFrame to numpy array
+            data_array = df.values  # Assuming your DataFrame is named 'df'
+
+            # Calculate the number of sequences that can be extracted
+            num_sequences = len(data_array) - sequence_length + 1
+
+            # Extract sequences of length 'sequence_length'
+            for i in range(num_sequences):
+                sequence = data_array[i:i + sequence_length]
+                reshaped_data.append(sequence)
+
+        # Convert reshaped_data to a numpy array
+        reshaped_data = np.array(reshaped_data)
+        # Save as attribute and return results
+        self.tensor = reshaped_data
+        return reshaped_data
+
     def save_processed_dataframes(self, path_to_save: str = "data/processed/P01/") -> None:
         """ Saves processed dataframes into the specified directory
 
@@ -115,6 +160,6 @@ class Preprocesser:
             os.makedirs(path_to_save)
 
         for i, df in enumerate(self.df_list_processed):
-            df.to_csv(path_to_save + f"{i+1}.csv")
+            df.to_csv(path_to_save + f"{i + 1}.csv")
 
         logger.info(f"Saved data in '{path_to_save}' ...")
