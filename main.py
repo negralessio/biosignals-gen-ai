@@ -23,7 +23,6 @@ def main():
     # Apply preprocessing pipeline to each df in df_list
     preprocesser = Preprocesser(df_list=df_list, **cfg["preprocessing"])
     tensor: np.array = preprocesser.preprocess_data()
-    print(tensor.shape)
 
     # To save preprocessed dataframes
     # preprocesser.save_processed_dataframes(path_to_save="data/processed/P01/")
@@ -31,6 +30,7 @@ def main():
     # Create VAE object, compile and fit the network
     vae = VAE(tensor=tensor, **cfg["architecture"])
     vae.compile(optimizer="adam")
+    vae.build((None, tensor.shape[1], tensor.shape[2]))
     vae.fit(tensor, epochs=32, batch_size=2)     # Or use **cfg["fitting"]
 
     # TODO: Train Test Split, modelling Module improvement, ...
