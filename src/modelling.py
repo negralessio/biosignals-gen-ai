@@ -115,3 +115,8 @@ class VAE(tf.keras.Model):
             "reconstruction_loss": self.reconstruction_loss_tracker.result(),
             "kl_loss": self.kl_loss_tracker.result(),
         }
+
+    def call(self, data):
+        z_mean, z_log_var, z = self.encoder(data)
+        reconstructed = self.decoder(z)
+        return reconstructed
