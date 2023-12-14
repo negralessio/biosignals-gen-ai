@@ -2,11 +2,13 @@
 import os
 import pandas as pd
 import logging
+import warnings
 
 import src.utils as utils
 
 utils.setup_logging()
 logger = logging.getLogger(__name__)
+warnings.filterwarnings("ignore")
 
 
 class DataLoader:
@@ -63,7 +65,7 @@ class DataLoader:
         for path in self.data_paths:
             df = pd.read_csv(path)
             # Convert 'TS_UNIX' to datetime
-            df["TS_UNIX"] = pd.to_datetime(df["TS_UNIX"], format="%Y-%m-%d %H:%M:%S.%f")
+            df["TS_UNIX"] = pd.to_datetime(df["TS_UNIX"], infer_datetime_format=True)  # format="%Y-%m-%d %H:%M:%S.%f"
             data.append(df)
 
         self.data = data
