@@ -5,7 +5,7 @@ import tensorflow as tf
 import numpy as np
 import src.utils as utils
 
-from tensorflow.keras.layers import Input, LSTM, RepeatVector, Dense, Bidirectional, TimeDistributed, Reshape
+from tensorflow.keras.layers import Input, LSTM, Dense, TimeDistributed, Reshape, Dropout
 
 utils.setup_logging()
 logger = logging.getLogger(__name__)
@@ -53,9 +53,11 @@ class Decoder:
     def get_decoder(self):
         """ Defines and returns Decoder architecture """
         decoder_inputs = Input(shape=(self.latent_dims,))
-        x = Dense(32, activation="relu")(decoder_inputs)
+        x = Dense(16, activation="relu")(decoder_inputs)
+        x = Dense(32, activation="relu")(x)
         x = Dense(self.sequence_length * 1, activation="relu", name='Decode_1')(x)
         x = Reshape((self.sequence_length, 1), name='Decode_2')(x)
+        x = Dropout(0.1, name='Dropout_1')(x)
         x = LSTM(self.num_features, return_sequences=True)(x)
         decoder_output = TimeDistributed(Dense(self.num_features, activation='linear'), name='Decoder_Output_Layer')(x)
         decoder = tf.keras.Model(inputs=decoder_inputs, outputs=decoder_output, name="decoder")
@@ -65,7 +67,7 @@ class Decoder:
 
 class VAE(tf.keras.Model):
     """ Class defining the Variational Auto Encoder """
-    def __init__(self, tensor: np.array, latent_dims: int, **kwargs):
+    def __init__(self, tensor: np.array, latent_dims: int, reconstruction_weight: int = 1, **kwargs):
         """
 
         :param tensor: np.array -- 3D tensor / input data
@@ -75,6 +77,7 @@ class VAE(tf.keras.Model):
         super().__init__(**kwargs)
         self.tensor = tensor
         self.latent_dims = latent_dims
+        self.reconstruction_weight = reconstruction_weight
         self.encoder = Encoder(tensor, latent_dims).get_encoder()
         self.decoder = Decoder(tensor, latent_dims).get_decoder()
         self.total_loss_tracker = tf.keras.metrics.Mean(name="total_loss")
@@ -104,7 +107,8 @@ class VAE(tf.keras.Model):
             )
             kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
             kl_loss = tf.reduce_mean(tf.reduce_sum(kl_loss, axis=1))
-            total_loss = reconstruction_loss + kl_loss
+            total_loss = self.reconstruction_weight * reconstruction_loss + kl_loss
+
         grads = tape.gradient(total_loss, self.trainable_weights)
         self.optimizer.apply_gradients(zip(grads, self.trainable_weights))
         self.total_loss_tracker.update_state(total_loss)
@@ -126,9 +130,8 @@ class VAE(tf.keras.Model):
 
         kl_loss = -0.5 * (1 + z_log_var - tf.square(z_mean) - tf.exp(z_log_var))
         kl_loss = tf.reduce_sum(tf.reduce_sum(kl_loss, axis=1))
-        # kl_loss = kl_loss / self.latent_dim
 
-        total_loss = reconstruction_loss + kl_loss
+        total_loss = self.reconstruction_weight * reconstruction_loss + kl_loss
 
         self.total_loss_tracker.update_state(total_loss)
         self.reconstruction_loss_tracker.update_state(reconstruction_loss)
