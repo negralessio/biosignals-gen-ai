@@ -44,15 +44,15 @@ class Preprocesser:
         # Iterate through each provided dataframe and apply multiple preprocessing steps
         for df in self.df_list:
             df = self.filter_condition_from_df(df, condition=self.condition)
-            for col in self.get_eeg_cols(df):
-                df = self.apply_rolling_window(df, feat=col, step=self.rolling_window_size)
-            df = self.remove_nan_rows(df, col_to_inspect=f"EEG-L3-RW{self.rolling_window_size}")
+            df = self.remove_nan_rows(df, col_to_inspect=f"EEG-L3")
             df = self.set_time_to_index(df)
             df = self.keep_only_relevant_features(df)
             df = self.cut_df_to_fixed_sized(df, desired_size=self.fixed_size)
             df = self.scale_df(df)
-            # Append preprocessed dataframe to list
-            df_list_post.append(df)
+            df_chunks: list[pd.DataFrame] = self.get_chunks_of_size_n(df, n=self.rolling_window_size)
+
+            # Append processed chunks in df_list_post
+            df_list_post = df_list_post + df_chunks
 
         self.df_list_processed = df_list_post
         _ = self.stack_to_3d()
@@ -65,13 +65,6 @@ class Preprocesser:
     def filter_condition_from_df(self, df: pd.DataFrame, condition: str) -> pd.DataFrame:
         """ Selects the corresponding rows from the given dataframe based on the condition """
         df = df[df["Condition"] == condition]
-        return df
-
-    def apply_rolling_window(self, df: pd.DataFrame, feat: str, step: int = 250) -> pd.DataFrame:
-        """ Applies rolling window with mean() operation and step size step on the df """
-        df = df.copy()
-        # Apply rolling window with step size step on column feat
-        df[f"{feat}-RW{step}"] = df[feat].rolling(window=step).mean()
         return df
 
     def remove_nan_rows(self, df: pd.DataFrame, col_to_inspect: str) -> pd.DataFrame:
@@ -93,7 +86,7 @@ class Preprocesser:
 
     def keep_only_relevant_features(self, df: pd.DataFrame) -> pd.DataFrame:
         """ Removes non-features of the input dataframe df """
-        cols_to_keep = [x for x in list(df.columns) if x.endswith(f"RW{self.rolling_window_size}")]
+        cols_to_keep = self.get_eeg_cols(df, search_str="EEG")
 
         return df[cols_to_keep]
 
@@ -121,6 +114,15 @@ class Preprocesser:
         scaler = MinMaxScaler()
         df_scaled = pd.DataFrame(scaler.fit_transform(df), index=df.index, columns=df.columns)
         return df_scaled
+
+    def get_chunks_of_size_n(self, df: pd.DataFrame, n: int = 250) -> list[pd.DataFrame]:
+        """ Partitions given input df into chunks of size n
+
+        :param df: pd.DataFrame
+        :param n: int -- Size of the chunks
+        :return: list[pd.DataFrame]
+        """
+        return [df[i:i+n] for i in range(0, len(df), n)]
 
     def stack_to_3d(self) -> np.array:
         """ Stacks the data in df_list_processed as 3D tensor ready for LSTM input
