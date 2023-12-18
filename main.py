@@ -7,7 +7,7 @@ import src.utils as utils
 
 from src.dataloading import DataLoader
 from src.preprocessing import Preprocesser
-from src.modelling import VAE
+from src.base_vae import VAE
 
 utils.setup_logging()
 logger = logging.getLogger(__name__)
