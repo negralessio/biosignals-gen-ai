@@ -7,6 +7,8 @@ import src.utils as utils
 
 from tensorflow.keras.layers import Input, LSTM, Dense, TimeDistributed, Reshape, Dropout
 
+from abc import ABC, abstractmethod
+
 utils.setup_logging()
 logger = logging.getLogger(__name__)
 
@@ -22,50 +24,7 @@ class Sampling(tf.keras.layers.Layer):
         return z_mean + tf.exp(0.5 * z_log_var) * epsilon
 
 
-class Encoder:
-    """ Encoder Class: Defines Encoder Architecture """
-
-    def __init__(self, tensor: np.array, latent_dims: int):
-        self.sequence_length = tensor.shape[1]
-        self.num_features = tensor.shape[2]
-        self.latent_dims = latent_dims
-
-    def get_encoder(self):
-        """ Defines and returns Encoder architecture """
-        inputs = Input(shape=(self.sequence_length, self.num_features))
-        z = LSTM(256)(inputs)
-        z_mean = Dense(self.latent_dims, name="z_mean")(z)
-        z_log_var = Dense(self.latent_dims, name="z_log_var")(z)
-        z = Sampling()([z_mean, z_log_var])
-        encoder = tf.keras.Model(inputs=[inputs], outputs=[z_mean, z_log_var, z], name="encoder")
-
-        return encoder
-
-
-class Decoder:
-    """ Decoder Class: Defines Decoder Architecture """
-
-    def __init__(self, tensor: np.array, latent_dims: int):
-        self.sequence_length = tensor.shape[1]
-        self.num_features = tensor.shape[2]
-        self.latent_dims = latent_dims
-
-    def get_decoder(self):
-        """ Defines and returns Decoder architecture """
-        decoder_inputs = Input(shape=(self.latent_dims,))
-        x = Dense(16, activation="relu")(decoder_inputs)
-        x = Dense(32, activation="relu")(x)
-        x = Dense(64, activation="relu")(x)
-        x = Dense(self.sequence_length * 1, activation="relu", name='Decode_1')(x)
-        x = Reshape((self.sequence_length, 1), name='Decode_2')(x)
-        x = LSTM(self.num_features, return_sequences=True)(x)
-        decoder_output = TimeDistributed(Dense(self.num_features, activation='linear'), name='Decoder_Output_Layer')(x)
-        decoder = tf.keras.Model(inputs=decoder_inputs, outputs=decoder_output, name="decoder")
-
-        return decoder
-
-
-class VAE(tf.keras.Model):
+class BaseVAE(tf.keras.Model, ABC):
     """ Class defining the Variational Auto Encoder """
     def __init__(self, tensor: np.array, latent_dims: int, reconstruction_weight: int = 1, **kwargs):
         """
@@ -78,15 +37,21 @@ class VAE(tf.keras.Model):
         self.tensor = tensor
         self.latent_dims = latent_dims
         self.reconstruction_weight = reconstruction_weight
-        self.encoder = Encoder(tensor, latent_dims).get_encoder()
-        self.decoder = Decoder(tensor, latent_dims).get_decoder()
+
+        self.encoder = self.get_encoder()
+        self.decoder = self.get_decoder()
+
         self.total_loss_tracker = tf.keras.metrics.Mean(name="total_loss")
         self.reconstruction_loss_tracker = tf.keras.metrics.Mean(name="reconstruction_loss")
         self.kl_loss_tracker = tf.keras.metrics.Mean(name="kl_loss")
 
-    def __post_init__(self):
-        logger.info(f"Initialized VAE object with tensor of shape {self.tensor.shape} "
-                    f"and latent dimension of size {self.latent_dims} ...")
+    @abstractmethod
+    def get_encoder(self, **kwargs):
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_decoder(self, **kwargs):
+        raise NotImplementedError
 
     @property
     def metrics(self):
