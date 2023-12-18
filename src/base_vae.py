@@ -25,18 +25,22 @@ class Sampling(tf.keras.layers.Layer):
 
 
 class BaseVAE(tf.keras.Model, ABC):
-    """ Class defining the Variational Auto Encoder """
+    """ Abstract class defining the Variational Auto Encoder """
     def __init__(self, tensor: np.array, latent_dims: int, reconstruction_weight: int = 1, **kwargs):
         """
 
         :param tensor: np.array -- 3D tensor / input data
         :param latent_dims: int -- Number of latent dimensions
+        :param reconstruction_weight: int -- How much more weight to add to the RL loss
         :param kwargs: dict
         """
         super().__init__(**kwargs)
         self.tensor = tensor
         self.latent_dims = latent_dims
         self.reconstruction_weight = reconstruction_weight
+
+        self.sequence_length = tensor.shape[1]
+        self.num_features = tensor.shape[2]
 
         self.encoder = self.get_encoder()
         self.decoder = self.get_decoder()

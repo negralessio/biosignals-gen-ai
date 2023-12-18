@@ -9,12 +9,13 @@ from src.base_vae import BaseVAE, Sampling
 class LSTMVAE(BaseVAE):
     """ Implementation of the BaseVAE using LSTM layers """
 
-    def __init__(self, tensor: np.array, latent_dims: int, reconstruction_weight: int = 1, **kwargs):
-        super().__init__(tensor, latent_dims, reconstruction_weight, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
     def get_encoder(self):
         """ Defines and returns Encoder architecture """
+
         inputs = Input(shape=(self.sequence_length, self.num_features))
         z = LSTM(256)(inputs)
         z_mean = Dense(self.latent_dims, name="z_mean")(z)
@@ -26,6 +27,7 @@ class LSTMVAE(BaseVAE):
 
     def get_decoder(self):
         """ Defines and returns Decoder architecture """
+
         decoder_inputs = Input(shape=(self.latent_dims,))
         x = Dense(16, activation="relu")(decoder_inputs)
         x = Dense(32, activation="relu")(x)
