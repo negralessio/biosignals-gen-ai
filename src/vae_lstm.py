@@ -3,7 +3,7 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import Input, LSTM, Dense, TimeDistributed, Reshape, Dropout
 
-from src.base_vae import BaseVAE, Sampling
+from src.vae_base import BaseVAE, Sampling
 
 
 class LSTMVAE(BaseVAE):
