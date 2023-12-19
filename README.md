@@ -15,7 +15,10 @@ TBD
  ┣ 📂tests                     <-- Unit tests for the source code
  ┃ ┣ 📜dataloading.py          <-- Class that handles the data loading
  ┃ ┣ 📜preprocessing.py        <-- Class that handles the data preprocessing
- ┃ ┗ 📜utils.py                <-- Contains utility / helper functions
+ ┃ ┣ 📜utils.py                <-- Contains utility / helper functions
+ ┃ ┣ 📜vae_base.py             <-- Abstract class of VAE
+ ┃ ┣ 📜vae_dense.py            <-- Implementation of base VAE using Dense layers
+ ┃ ┗ 📜vae_lstm.py             <-- Implementation of base VAE using LSTM layers
  ┣ 🕹️main.py                   <-- Entry point of the pipeline
  ┣ 📜README.md                 <-- The top-level README for developers using this project
  ┗ 📜requirements.txt          <-- The requirenments file for reproducing the environment
