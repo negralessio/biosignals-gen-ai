@@ -35,6 +35,7 @@ class DenseVAE(BaseVAE):
         x = Dense(32, activation="relu")(x)
         x = Dense(64, activation="relu")(x)
         x = Dense(128, activation="relu")(x)
+        x = Dense(256, activation="relu")(x)
         x = Dense(self.sequence_length * self.num_features, name='decoder_final_dense')(x)
         decoder_output = Reshape(target_shape=(self.sequence_length, self.num_features))(x)
         decoder = tf.keras.Model(inputs=decoder_inputs, outputs=decoder_output, name="decoder")
