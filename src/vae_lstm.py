@@ -1,4 +1,3 @@
-import numpy as np
 import tensorflow as tf
 
 from tensorflow.keras.layers import Input, LSTM, Dense, TimeDistributed, Reshape, Dropout
@@ -11,7 +10,6 @@ class LSTMVAE(BaseVAE):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
 
     def get_encoder(self):
         """ Defines and returns Encoder architecture """
@@ -29,8 +27,6 @@ class LSTMVAE(BaseVAE):
         """ Defines and returns Decoder architecture """
 
         decoder_inputs = Input(shape=(self.latent_dims,))
-        #x = Dense(16, activation="relu")(decoder_inputs)
-        #x = Dense(32, activation="relu")(x)
         x = Dense(self.sequence_length * 1, activation="relu", name='Decode_1')(decoder_inputs)
         x = Reshape((self.sequence_length, 1), name='Decode_2')(x)
         x = LSTM(50, return_sequences=True)(x)
