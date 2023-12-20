@@ -5,7 +5,7 @@ dataloading:
 # PREPROCESSING SETTINGS
 preprocessing:
   condition: "MathxHard"
-  rolling_window_size: 250
+  partition_size: 250
   fixed_size: 10990
 
 # ARCHITECTURE SETTINGS

@@ -15,16 +15,16 @@ logger = logging.getLogger(__name__)
 
 class Preprocesser:
 
-    def __init__(self, df_list: list[pd.DataFrame], condition: str, rolling_window_size: int, fixed_size: int):
+    def __init__(self, df_list: list[pd.DataFrame], condition: str, partition_size: int, fixed_size: int):
         """
         :param df_list: list[pd.DataFrame] -- Input Dataframes stored in a list
         :param condition: str -- Current condition to analyse
-        :param rolling_window_size: int -- Rolling window size to aggregate rows
+        :param partition_size: int -- Number of rows to take as one chunk
         :param fixed_size: int -- Which fixed size of the time series to be desired
         """
         self.df_list: list[pd.DataFrame] = df_list
         self.condition: str = condition
-        self.rolling_window_size: int = rolling_window_size
+        self.partition_size: int = partition_size
         self.fixed_size: int = fixed_size
 
         self.df_list_processed = None
@@ -36,7 +36,7 @@ class Preprocesser:
         :return: tensor: np.array -- 3D Tensor of processed data
         """
         logger.info(f"Starting preprocessing pipeline (Condition: {self.condition},"
-                    f" Window Size: {self.rolling_window_size},"
+                    f" Partition Size: {self.partition_size},"
                     f" Fixed Size: {self.fixed_size}) ...")
         start_time = time.time()
         df_list_post = []
@@ -49,7 +49,7 @@ class Preprocesser:
             df = self.keep_only_relevant_features(df)
             df = self.cut_df_to_fixed_sized(df, desired_size=self.fixed_size)
             df = self.scale_df(df)
-            df_chunks: list[pd.DataFrame] = self.get_chunks_of_size_n(df, n=self.rolling_window_size)
+            df_chunks: list[pd.DataFrame] = self.get_chunks_of_size_n(df, n=self.partition_size)
 
             # Append processed chunks in df_list_post
             df_list_post = df_list_post + df_chunks
