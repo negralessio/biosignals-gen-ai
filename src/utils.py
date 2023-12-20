@@ -1,6 +1,7 @@
 import yaml
 import argparse
 import logging
+import datetime
 
 
 def load_config(config_path: str) -> dict:
@@ -45,3 +46,26 @@ def setup_logging(loglevel=logging.INFO) -> None:
     :return: None
     """
     logging.basicConfig(level=loglevel, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+
+def get_time_date() -> str:
+    """ Returns the datetime as str
+
+    :return: time_str: str
+    """
+    time_str = datetime.datetime.now().strftime("%Y-%m-%d--%H-%M-%S")
+    return time_str
+
+
+def get_model_id(n_epochs, n_batches, val_split, latent_dim) -> str:
+    """ Returns an ID for a model run using the current time + hyperparams
+
+    :param n_epochs: int -- # of epochs
+    :param n_batches: int -- # of batches
+    :param val_split: float -- validation size (e.g. 0.2)
+    :param latent_dim: int -- # of latent dimension
+    :return: result: str -- Model ID given the input params
+    """
+    time = get_time_date()
+    result = f"T{time}---E{n_epochs}-B{n_batches}-VAL{int(val_split*100)}-LD{latent_dim}"
+    return result
