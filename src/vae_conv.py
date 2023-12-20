@@ -17,7 +17,9 @@ class ConvVAE(BaseVAE):
 
         inputs = Input(shape=(self.sequence_length, self.num_features))
 
-        z = Conv1D(filters=50, kernel_size=3, strides=2, activation="relu", padding="same")(inputs)
+        z = Conv1D(filters=5, kernel_size=3, strides=2, activation="relu", padding="same")(inputs)
+        z = Conv1D(filters=25, kernel_size=3, strides=2, activation="relu", padding="same")(z)
+        z = Conv1D(filters=50, kernel_size=3, strides=2, activation="relu", padding="same")(z)
         z = Conv1D(filters=100, kernel_size=3, strides=2, activation="relu", padding="same")(z)
         z = Flatten()(z)
         self.encoder_last_dense_dim = z.get_shape()[-1]
@@ -37,13 +39,13 @@ class ConvVAE(BaseVAE):
         x = Dense(self.encoder_last_dense_dim, name="dec_dense", activation='relu')(decoder_inputs)
         x = Reshape(target_shape=(-1, 100), name="dec_reshape")(x)
         x = Conv1DTranspose(
-            filters=100,
+            filters=50,
             kernel_size=3,
             strides=2,
             padding='same',
             activation='relu')(x)
         x = Conv1DTranspose(
-            filters=50,
+            filters=25,
             kernel_size=3,
             strides=2,
             padding='same',
