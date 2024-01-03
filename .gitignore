@@ -1,7 +1,5 @@
 # Data directory
 /data/*
-!/data/processed/geocoded_districts_affected.csv
-# include specific files
 
 # IDE (Integrated Development Environment)
 .idea/
@@ -15,6 +13,7 @@ __pycache__/
 
 # MLFlow runs
 /mlruns/*
+/notebooks/mlruns/*
 
 # Data directory
 /data/*
