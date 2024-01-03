@@ -1,5 +1,7 @@
 yaml
+numpy
 pandas
 matplotlib
 seaborn
 tensorflow
+mlflow
