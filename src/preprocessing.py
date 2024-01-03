@@ -27,8 +27,12 @@ class Preprocesser:
         self.partition_size: int = partition_size
         self.fixed_size: int = fixed_size
 
+        # List of processed DataFrames after preprocess_data() func
         self.df_list_processed = None
+        # Stacked 3D Numpy Array of preprocessed data after preprocess_data() func
         self.tensor = None
+        # Scaled MinMax or StandardScaler Object after scale_df() func
+        self.scaler = None
 
     def preprocess_data(self) -> np.array:
         """ Applies a number of preprocessing steps to the input dataframes
@@ -113,6 +117,7 @@ class Preprocesser:
         """
         scaler = MinMaxScaler()
         df_scaled = pd.DataFrame(scaler.fit_transform(df), index=df.index, columns=df.columns)
+        self.scaler = scaler
         return df_scaled
 
     def get_chunks_of_size_n(self, df: pd.DataFrame, n: int = 250) -> list[pd.DataFrame]:
