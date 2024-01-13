@@ -73,7 +73,7 @@ class Preprocesser:
         self._process_labels()
 
         dur = time.time() - start_time
-        logger.info(f"Finished preprocessing pipeline (Duration: {dur:.2f}s) ...")
+        logger.info(f"Finished preprocessing pipeline (Duration: {dur:.2f}s) ...\n")
 
         return self.tensor
 
