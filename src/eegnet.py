@@ -15,7 +15,7 @@ from tensorflow.keras import backend as K
 
 def EEGNet(nb_classes, Chans=7, Samples=250,
            dropoutRate=0.5, kernLength=64, F1=8,
-           D=2, F2=16, norm_rate=0.25, dropoutType='Dropout'):
+           D=2, F2=16, norm_rate=0.25, dropoutType='Dropout', activation="elu"):
     """ Keras Implementation of EEGNet
     http://iopscience.iop.org/article/10.1088/1741-2552/aace8c/meta
 
@@ -96,14 +96,14 @@ def EEGNet(nb_classes, Chans=7, Samples=250,
                              depth_multiplier=D,
                              depthwise_constraint=max_norm(1.))(block1)
     block1 = BatchNormalization()(block1)
-    block1 = Activation('elu')(block1)
+    block1 = Activation(activation)(block1)
     block1 = AveragePooling2D((1, 4))(block1)
     block1 = dropoutType(dropoutRate)(block1)
 
     block2 = SeparableConv2D(F2, (1, 16),
                              use_bias=False, padding='same')(block1)
     block2 = BatchNormalization()(block2)
-    block2 = Activation('elu')(block2)
+    block2 = Activation(activation)(block2)
     block2 = AveragePooling2D((1, 8))(block2)
     block2 = dropoutType(dropoutRate)(block2)
 
