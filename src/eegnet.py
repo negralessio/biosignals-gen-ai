@@ -89,7 +89,6 @@ def EEGNet(nb_classes, Chans=7, Samples=250,
 
     ##################################################################
     block1 = Conv2D(F1, (1, kernLength), padding='same',
-                    input_shape=(Chans, Samples, 1),
                     use_bias=False)(input1)
     block1 = BatchNormalization()(block1)
     block1 = DepthwiseConv2D((Chans, 1), use_bias=False,
@@ -127,8 +126,7 @@ def EEGNetConv1D(nb_classes=3, timesteps=250, channels=7, dropoutRate=0.5):
     from keras.regularizers import L2
 
     model_m = Sequential()
-    model_m.add(Dropout(dropoutRate, input_shape=(timesteps, channels)))
-    model_m.add(Conv1D(128, 4, kernel_constraint=max_norm(1.), padding='same'))
+    model_m.add(Conv1D(128, 4, kernel_constraint=max_norm(1.), padding='same', input_shape=(timesteps, channels)))
     model_m.add(Conv1D(128, 4, kernel_constraint=max_norm(1.), padding='same', ))
     model_m.add(BatchNormalization(axis=-1))
     model_m.add(Activation("relu"))
