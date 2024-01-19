@@ -12,6 +12,8 @@ from tensorflow.keras.layers import Input, Flatten
 from tensorflow.keras.constraints import max_norm
 from tensorflow.keras import backend as K
 
+import tensorflow as tf
+
 
 def EEGNet(nb_classes, Chans=7, Samples=250,
            dropoutRate=0.5, kernLength=64, F1=8,
@@ -115,30 +117,5 @@ def EEGNet(nb_classes, Chans=7, Samples=250,
     return Model(inputs=input1, outputs=softmax)
 
 
-def EEGNetConv1D(nb_classes=3, timesteps=250, channels=7, dropoutRate=0.5):
-    """
-    Architecture from Peijin Chen.
-    See https://peijin.medium.com/deep-learning-for-eegs-nad-bci-some-notes-and-some-warnings-28cfc3015a98
-    Accessed 13.01.2024
-    """
-    from tensorflow.keras.layers import AveragePooling1D, Conv1D, MaxPooling1D
-    from tensorflow.keras import Sequential
-    from keras.regularizers import L2
 
-    model_m = Sequential()
-    model_m.add(Conv1D(128, 4, kernel_constraint=max_norm(1.), padding='same', input_shape=(timesteps, channels)))
-    model_m.add(Conv1D(128, 4, kernel_constraint=max_norm(1.), padding='same', ))
-    model_m.add(BatchNormalization(axis=-1))
-    model_m.add(Activation("relu"))
-    model_m.add(MaxPooling1D(2))
-    model_m.add(Dropout(dropoutRate))
-    model_m.add(Conv1D(128, 10, kernel_constraint=max_norm(1.), padding='same'))
-    model_m.add(Conv1D(128, 10, kernel_constraint=max_norm(1.), padding='same'))
-    model_m.add(BatchNormalization(axis=-1))
-    model_m.add(Activation("relu"))
-    model_m.add(MaxPooling1D(10))
-    model_m.add(Flatten())
-    model_m.add(Dense(64, kernel_regularizer=L2(1e-5), activation='relu', kernel_constraint=max_norm(1.)))
-    model_m.add(Dense(nb_classes, activation='softmax'))
 
-    return model_m
