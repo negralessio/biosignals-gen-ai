@@ -4,15 +4,17 @@ dataloading:
 
 # PREPROCESSING SETTINGS
 preprocessing:
-  condition: "MathxHard"
+  conditions: ["MathxHard"]
   partition_size: 250
-  fixed_size: 10990
+  fixed_size: 11000
 
 # ARCHITECTURE SETTINGS
 architecture:
-  latent_dims: 2
+  latent_dims: 8
+  beta: 0.01
+  dropout_rate: 0.0
 
 # FITTING SETTINGS
 fitting:
-  epochs: 32
-  batch_size: 1
+  epochs: 128
+  batch_size: 4
