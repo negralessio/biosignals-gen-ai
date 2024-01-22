@@ -78,7 +78,7 @@ notebooks found in `.notebooks/` dir.
 # Findings
 Below you can find the results of our VAE on the EEGNet. 
 - Populating the train set with reconstructed / synthetic data decreases the validation loss and
-- also makes stabilizes the training, especially in the context of low samples as we have here
+- also stabilizes the training, especially in the context of low samples as we have here
 ## Learning Curves of the VAE
 ![learning_curves](assets/readme/learning_curves_vae.png)
 
