@@ -88,3 +88,15 @@ Below you can find the results of our VAE on the EEGNet.
 ## Effect on the EEGNet
 ![0synth](assets/readme/0-run-NRUNS-25.png)
 ![0synth](assets/readme/1-run-NRUNS-25.png)
+
+## Effect on the EEGNet: Table View
+
+| % Synth. Added | Mean Loss | SD Loss | Mean Val Loss | SD Val Loss | Mean ACC | SD ACC | Mean Val ACC | SD Val ACC |
+|:--------------:|-----------|---------|---------------|-------------|----------|--------|--------------|------------|
+|       0%       | 0.2318    | 0.0129  | 0.1926        | 0.0777      | 0.9273   | 0.0113 | 0.9784       | 0.0625     |
+|       25%      | 0.2934    | 0.0094  | 0.1789        | 0.0479      | 0.9130   | 0.0087 | 0.9942       | 0.0162     |
+|       50%      | 0.2512    | 0.0158  | 0.1518        | 0.0461      | 0.9173   | 0.0111 | 0.9986       | 0.0039     |
+|      100%      | 0.2101    | 0.0151  | 0.1420        | 0.0475      | 0.9524   | 0.0150 | 0.9956       | 0.0164     |
+
+- Sweet Spot is 50% added reconstructed / synthetic data
+- Generalization ability of EEGNet is improved
