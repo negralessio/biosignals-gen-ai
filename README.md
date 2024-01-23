@@ -1,3 +1,13 @@
+# Table of Contents
+1. [About the Project](#about-the-project)
+2. [Folder Structure](#folder-structure-)
+3. [Setup](#setting-up-the-environment-and-run-the-code)
+4. [Findings](#findings)
+   5. [VAE: Learning Curves](#learning-curves-of-the-vae)
+   6. [Visualization Latent Space](#visualization-of-the-8d-latent-space-using-pca)
+   7. [Effect on the EEGNet](#effect-on-the-eegnet)
+   8. [Effect on the EEGNet Table View](#effect-on-the-eegnet-table-view)
+
 # About the Project
 **Title**: `Biosignals Decoder: Improve available classifiers through data augmention using generative AI`  
 **Supervisor**: `Dr. Michael Knierim (IISM)`  
