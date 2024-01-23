@@ -1,6 +1,8 @@
 # About the Project
-**Title**: ``Improve available classifiers through data augmention using generative AI``  
-At the Chair of Information & Market Engineering (IISM) at Karlsruhe Institute of Technology.
+**Title**: `Biosignals Decoder: Improve available classifiers through data augmention using generative AI`  
+**Supervisor**: `Dr. Michael Knierim (IISM)`  
+**Chair**: `Chair of Information & Market Engineering (IISM) at Karlsruhe Institute of Technology`  
+**Date**: `25.01.2024`  
 
 Development of a Variational Autoencoder (VAE) to synthetically create realistic EEG data (multivariate time series). 
 As for the data we used 10 sessions of one field study participant solving difficult math task, while 7 channels were
@@ -99,6 +101,7 @@ Below you can find the results of our VAE on the EEGNet.
 |    **50%**     | **0.2512** | **0.0158** | **0.1518**    | **0.0461**  | **0.9173** | **0.0111** | **0.9986**   | **0.0039** |
 |      100%      | 0.2101     | 0.0151     | 0.1420        | 0.0475      | 0.9524     | 0.0150     | 0.9956       | 0.0164     |
 
+- Above: Data Aggregation of the last epoch (#32) over all 25 runs
 - Sweet Spot is 50% added reconstructed / synthetic data
 - Generalization ability of EEGNet is improved
   - Significantly lower standard deviation (SD) in the validation accuracy and loss
