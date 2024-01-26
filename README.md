@@ -36,8 +36,8 @@ increases the validation accuracy (see figures below).
  ┃ ┣ 💻eda.ipynb               <-- Exploratory Data Analysis Notebook
  ┃ ┣ 💻eegnet.ipynb            <-- Experimenting with EEGNet and my VAE
  ┃ ┗ 💻vae.ipynb               <-- Development of my VAE (Dense)
- ┣ 📂src                       <-- Source code / modules / classes
  ┣ 📂tests                     <-- Unit tests for the source code
+ ┣ 📂src                       <-- Source code / modules / classes
  ┃ ┣ 📜dataloading.py          <-- Class that handles the data loading
  ┃ ┣ 📜eegnet.py               <-- Contains the EEGNet Architecture by Lawhern et al. 2016
  ┃ ┣ 📜modelling.py            <-- Contains helper function to analyse the modelling, e.g. history plots
@@ -112,6 +112,6 @@ Below you can find the results of our VAE on the EEGNet.
 |      100%      | 0.2101     | 0.0151     | 0.1420        | 0.0475      | 0.9524     | 0.0150     | 0.9956       | 0.0164     |
 
 - Above: Data Aggregation of the last epoch (#32) over all 25 runs
-- Sweet Spot is 50% added reconstructed / synthetic data
+- Sweet Spot is 50% added reconstructed / synthetic data, as the mean validation ACC is the highest and standard deviation the lowest
 - Generalization ability of EEGNet is improved
   - Significantly lower standard deviation (SD) in the validation accuracy and loss
