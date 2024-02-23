@@ -19,7 +19,9 @@ As for the data we used 10 sessions of one field study participant solving diffi
 attached to his/her brain to collect EEG data. During the field study we surveyed the mental workload that serves as
 our class labels (for the EEGNet). In this seminar, we have shown that by populating the training set *X_train* with
 synthetical / reconstructed data from the VAE, it stabilizes the training and decreases the validation loss and also 
-increases the validation accuracy (see figures below).
+increases the validation accuracy (see figures below).  
+
+To access the submitted seminar thesis, click [here](https://github.com/negralessio/biosignals-gen-ai/blob/master/documentation/Biosignals_Decoders_Negrini.pdf) or go to the `documentation` dir.
 
 # Folder Structure 🗂️
 ```
